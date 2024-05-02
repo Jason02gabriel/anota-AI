@@ -7,6 +7,8 @@ import com.gabriel.anota.AIapi.domain.products.Product;
 import com.gabriel.anota.AIapi.domain.products.ProductDTO;
 import com.gabriel.anota.AIapi.domain.products.exceptions.ProductNotFoundException;
 import com.gabriel.anota.AIapi.repository.ProductRepository;
+import com.gabriel.anota.AIapi.service.aws.AwsSnsService;
+import com.gabriel.anota.AIapi.service.aws.MessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class ProductService {
     private ProductRepository repository;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private AwsSnsService awsSnsService;
 
 
     public Product insert(ProductDTO productData){
@@ -27,11 +31,15 @@ public class ProductService {
                 .orElseThrow(CategoryNotFoundException::new);
         Product product = new Product(productData);
         product.setCategory(category);
-        return repository.save(product);
+        repository.save(product);
+        awsSnsService.publishMessage(new MessageDTO(product.getOwnerId()));
+        return product;
+
     }
     public List<Product> findAll(){
         return repository.findAll();
     }
+
     public Product update(String id, ProductDTO productData){
         Product product = repository.findById(id).orElseThrow(ProductNotFoundException::new);
         if(productData.categoryId() !=null) {
@@ -44,7 +52,12 @@ public class ProductService {
             product.setDescription(productData.description());
         if (!(productData.price() == null))
             product.setPrice(productData.price());
-        return repository.save(product);
+
+        repository.save(product);
+        awsSnsService.publishMessage(new MessageDTO(product.getOwnerId()));
+        return product;
+
+
     }
 
     public void delete(String id){
