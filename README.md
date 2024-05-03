@@ -32,7 +32,7 @@ git clone https://github.com/Fernanda-Kipper/desafio-anotaai-backend.git
 3. Create a configuration with your runtime environment variables with your AWS Credentials that are used in `application.properties`
 
 ```yaml
-aws.region=us-east-1
+aws.region=us-east-2
 aws.accessKeyId=${AWS_KEY_ID}
 aws.secretKey=${AWS_SECRET}
 ```
