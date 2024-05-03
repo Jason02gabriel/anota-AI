@@ -24,7 +24,7 @@ This project is an API built using **Java, Java Spring, AWS Simple Queue Service
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Fernanda-Kipper/desafio-anotaai-backend.git
+git clone https://github.com/Jason02gabriel/anota-AI.git
 ```
 
 2. Install dependencies with Maven
